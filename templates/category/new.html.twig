@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{# templates/category/new.html.twig #}
+
+{# this tag only applies to the forms defined in this template #}
+{% form_theme formCategory 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+    <h1>Add a category</h1>
+
+    {{ form_start(formCategory) }}
+
+    {{ form_row(formCategory.name,{'attr':{'placeholder':'Category name'}}) }}
+
+    {{ form_row(formCategory.description,{'attr':{'placeholder':'Category description'}}) }}
+    
+    <button type="submit" class="btn btn-success" />
+        {% if buttonMode=="add" %}
+            Add category
+        {% elseif buttonMode=="update" %}
+            Edit category
+        {% endif %}
+    {{ form_end(formCategory) }}
+
+{% endblock %}

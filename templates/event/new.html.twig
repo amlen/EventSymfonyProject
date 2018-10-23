@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{# templates/event/new.html.twig #}
+
+{# this tag only applies to the forms defined in this template #}
+{% form_theme formEvent 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+    <h1>Add an event</h1>
+
+    {{ form_start(formEvent) }}
+
+    {{ form_row(formEvent.name,{'attr':{'placeholder':'Event name'}}) }}
+
+    {{ form_row(formEvent.description,{'attr':{'placeholder':'Event description'}}) }}
+
+    {{ form_end(formEvent) }}
+
+{% endblock %}
