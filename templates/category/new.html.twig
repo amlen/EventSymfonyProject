@@ -14,12 +14,6 @@
 
     {{ form_row(formCategory.description,{'attr':{'placeholder':'Category description'}}) }}
     
-    <button type="submit" class="btn btn-success" />
-        {% if buttonMode=="add" %}
-            Add category
-        {% elseif buttonMode=="update" %}
-            Edit category
-        {% endif %}
     {{ form_end(formCategory) }}
 
 {% endblock %}

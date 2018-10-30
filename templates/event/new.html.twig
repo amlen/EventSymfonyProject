@@ -11,9 +11,11 @@
     {{ form_start(formEvent) }}
 
     {{ form_row(formEvent.name,{'attr':{'placeholder':'Event name'}}) }}
+    
+    {{ form_row(formEvent.category) }}
 
     {{ form_row(formEvent.description,{'attr':{'placeholder':'Event description'}}) }}
-
+    
     {{ form_end(formEvent) }}
 
 {% endblock %}

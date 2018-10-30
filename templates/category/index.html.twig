@@ -1,19 +1,19 @@
 
+
 {% extends 'base.html.twig' %}
 
+
 {% block body %}
+    {% for cat in categories %}
+        <a href="{{path('show_info_category', { 'id': cat.id })}}" ><h2>{{ cat.name}}</h2></a>
+                
+        <div class="content">
+            {{ cat.description}}
+        </div>
+        <a href="{{path('deleteCategory', { 'id': cat.id })}}" ><h2>Delete</h2></a>
+        <a href="{{path('categoryUpdate', { 'id': cat.id })}}" ><h2>Update</h2></a>
+    {% endfor %}
+    
 
-    <h1>categories</h1>
-    <ul>
-        {% for cat in categories %}
-            <li> {{ cat.id }} :{{ cat.nom }}</li>
-        {% endfor %}
-    </ul>
-
-    <ul>
-        <li><a href="{{path('allCategory')}}">catégories</a></li>
-        <li><a href="{{path('newCategory')}}">Ajouter un catégorie</a></li>
-        
-    </ul>
   
 {% endblock %}

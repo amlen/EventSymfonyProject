@@ -23,11 +23,10 @@ class Category
      * @ORM\Column(type="string", length=255)
      *  @Assert\Length(
      *      min = 6,
-     *      max = 50,
      *      minMessage = "The name must be at least {{ limit }} characters long",
      *      maxMessage = "The name cannot be longer than {{ limit }} characters")
      **/
-    private $Name;
+    private $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -51,12 +50,12 @@ class Category
 
     public function getName(): ?string
     {
-        return $this->Name;
+        return $this->name;
     }
 
-    public function setName(string $Name): self
+    public function setName(string $name): self
     {
-        $this->Name = $Name;
+        $this->name = $name;
 
         return $this;
     }
@@ -102,6 +101,13 @@ class Category
         }
 
         return $this;
+    }
+
+    public function __toString(){
+        // to show the name of the Category in the select
+        return $this->name;
+        // to show the id of the Category in the select
+        // return $this->id;
     }
 
   

@@ -10,21 +10,21 @@ use Doctrine\ORM\Mapping as ORM;
 class Event
 {
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Category",inversedBy="Event")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="id")
      * @ORM\JoinColumn(nullable=false)
     */
-    private $categoryId;
+    private $category;
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
+    
+     /**
      * @ORM\Column(type="string", length=255)
-     */
-    private $Name;
+     **/
+    private $name;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -44,12 +44,12 @@ class Event
 
     public function getName(): ?string
     {
-        return $this->Name;
+        return $this->name;
     }
 
-    public function setName(string $Name): self
+    public function setName(string $name): self
     {
-        $this->Name = $Name;
+        $this->name = $name;
 
         return $this;
     }
@@ -78,14 +78,14 @@ class Event
         return $this;
     }
 
-    public function getCategoryId(): ?Category
+    public function getCategory(): ?Category
     {
-        return $this->categoryId;
+        return $this->category;
     }
 
-    public function setCategoryId(?Category $categoryId): self
+    public function setCategory(?Category $category): self
     {
-        $this->categoryId = $categoryId;
+        $this->category = $category;
 
         return $this;
     }

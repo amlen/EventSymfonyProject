@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Controller;
-
+//use symfony\Flex\Response;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,32 +21,41 @@ use Symfony\Component\Validator\Constraints\Date;
 class EventController extends Controller
 {
     /**
-     * @Route("/", name="event")
+     * @Route("/", name="show_events")
      */
     public function index()
-    {
-        return $this->render('event/index.html.twig', [
-            'controller_name' => 'EventController',
-        ]);
-    }
-    /**
-     * @Route("/add",name="event_add")
-     */
-    public function AddEvent(Request $request,ObjectManager $manager){
-        dump($request);
+    {   
 
-        if($request->request->count() > 0){
-            $event = new Event();
-            $event-> setNom($request->$request->get('nom'))
-                  -> setDescription($request->$request->get('description'))
-                  -> setDate($request->$request->get('date'));
-            
-            $manager->persist($event);
-            $manager->flush();
+        $ev = $this->getDoctrine()->getManager();
+        $allEvents = $ev->getRepository(Event::class)->findAll();
+        if (!$allEvents) {
+        throw $this->createNotFoundException(
+            'Aucun évenement trouvé '
+        );
         }
-        return $this->render('event/addEvent.html.twig');
+        return $this->render('event/index.html.twig', array(
+            'events' => $allEvents,
+        ));
+      
     }
 
+      /**
+     * @Route("event/{id}",name="show_info_event")
+     */
+    public function showEvent($id)
+    {  
+        
+        $repo = $this->getDoctrine()->getRepository(Event::class);
+        
+        //Request Handling
+        $event= $repo->find($id);
+        //$event = $formEvent->getData();
+
+       
+        return $this->render('event/showEvent.html.twig',  array(
+            'event' => $event));
+    }
+    
      /**
      * @Route("/new",name="event_new")
      */
@@ -56,17 +66,9 @@ class EventController extends Controller
         $formEvent = $this->createFormBuilder($event)
                      ->add('name')
                      ->add('description')
+                     ->add('category')
                      ->add('date')
-                   /*  ->add('categoryId', EntityType::class, [
-                         
-                         // looks for choices from this entity
-                        'class' => Category::class,
-
-                        // uses the User.username property as the visible option string
-                        'Choice_label' => 'name',
-                        ])*/
                      ->add('Add', SubmitType::class)
-                    
                      ->getForm();
         
         //Request Handling
@@ -75,13 +77,54 @@ class EventController extends Controller
 
         //Test if the form is validate and  submitted
         if ($formEvent->isValid() && $formEvent->isSubmitted()) {
-            $event->setCreatdAt(new \DateTime());
+           // $event->setCreatdAt(new \DateTime());
             
             $manager->persist($event);
             $manager->flush();
-            return new Response('La tâche ajoutée avec succès !'); 
+            return $this->redirectToRoute("show_events");
+        }else
+            return $this->render('event/new.html.twig', array('formEvent' =>
+            $formEvent->createView()));
+    }
+
+    /**
+     * @Route("/delete/{id}",name="deleteEvent")
+     */
+    public function deleteCategory($id)
+    {  
+        
+        $repo = $this->getDoctrine()->getManager();
+        $event =$repo->getRepository(Event::class)->find($id);
+        $repo->remove($event);
+        $repo->flush();
+        return $this->redirectToRoute("show_events");
+    }
+
+      /**
+     * @Route("update/{id}",name="EventUpdate")
+     */
+    public function updateEvent(Event $event ,Request $request, ObjectManager $manager)
+    {  
+        
+      
+       $formEvent = $this->createFormBuilder($event)
+                            ->add('name')
+                            ->add('description')
+                            ->add('category')
+                            ->add('date')
+                            ->add('Update', SubmitType::class)
+                            ->getForm();
+        //Request Handling
+        $formEvent->handleRequest($request);
+        $event = $formEvent->getData();
+
+        //Test if the form is validate and  submitted
+        if ($formEvent->isValid() && $formEvent->isSubmitted()) {   
+            $manager->persist($event);
+            $manager->flush();
+            return $this->redirectToRoute("show_events"); 
         }
         return $this->render('event/new.html.twig', array('formEvent' =>
-        $formEvent->createView()));
+            $formEvent->createView()));
     }
 }
