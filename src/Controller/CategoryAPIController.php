@@ -7,126 +7,222 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\Common\Persistence\ObjectManager;
 use App\Entity\Category;
+use App\Entity\Event;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Response;
 use App\Form\CategoryType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-/*
+
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
-use  Symfony\Component\Serializer\Serializer;
-*/
-class CategoryAPIController extends Controller
+use Symfony\Component\Serializer\Serializer;
+
+class CategoryAPIController extends AbstractController
 {
     /**
-    * @Route("api/category",name="api_allCategory")
-    * //@Method("GET")
+    * @Route("/api/categories",name="api_allCategory",methods={"GET","HEAD"})
     */
-    public function showall()
+    public function showall()//ok
     {
-        $em = $this->getDoctrine()->getManager();
-        $allCategories = $em->getRepository(Category::class)->findAll();
-        if (!$allCategories) {
-            throw $this->createNotFoundException(
-            'Aucun produit trouvé '
-            );
+        $encoders = array(new JsonEncoder());
+        $normalizers = array(new ObjectNormalizer());
+        $serializer = new Serializer($normalizers, $encoders);
+
+        $categories = $this->getDoctrine()
+                           ->getRepository(Event::class)
+                           ->findAll();
+
+        $jsonContent = $serializer->serialize($categories, 'json');
+
+        $response = new JsonResponse();
+        $response->setContent($jsonContent);
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setStatusCode('302');
+
+        return $response;
+    }
+
+    /**
+     * @Route("/api/addCategory",name="Api_category_new",methods={"POST", "OPTIONS"})
+     */
+    public function addCategory(Request $request)//bug
+    {  
+        $response = new Response();
+        $query = array();
+
+        if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS')
+        {
+            $response->headers->set('Content-Type', 'application/text');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type',true);
+
+            return $response;
         }
-       // var_dump($allCategories);
-        return $this->render('category/index.html.twig', array(
-            'categories' => $allCategories,
-        ));
+
+        $json = $request->getContent();
+        $content = json_decode($json, true);
+        print('jj '.$content["name"]);
+        if (isset($content["name"]) && isset($content["description"]))
+        {
+            $cat = new Category();
+
+            $cat->setName($content["name"]);
+            $cat->setDescription($content["description"]);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($cat);
+            $em->flush();
+            
+            $query['valid'] = true; 
+            $query['data'] = array('name' => $content["name"],
+                                   'description' => $content["description"]);
+            $response->setStatusCode('201');
+        }
+        else 
+        {
+            $query['valid'] = false; 
+            $query['data'] = null;
+            $response->setStatusCode('404');
+        }        
+
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($query));
+        return $response; 
     }
-
-    /**
-     * @Route("api/category/new",name="api_category_new")
-     * //@Method("POST")
-     */
-    public function addCategory(Request $request, ObjectManager $manager)
-    {  
-      
-        $category = new Category();
-
-        $formCategory = $this->createFormBuilder($category)
-                             ->add('name')
-                             ->add('description')
-                             ->add('Add', SubmitType::class)
-                             ->getForm();
-        
-        //Request Handling
-        $formCategory->handleRequest($request);
-        $category = $formCategory->getData();
-
-        //Test if the form is validate and  submitted
-        if ($formCategory->isValid() && $formCategory->isSubmitted()) {   
-            $manager->persist($category);
-            $manager->flush();
-           // return new Response('Le catégorie est  ajoutée avec succès !'); 
-           return $this->redirectToRoute("allCategory");
-        }else
-            return $this->render('category/new.html.twig', array('formCategory' =>
-            $formCategory->createView()));    
-    }
-
-    /**
-     * @Route("api/category/{id}",name="api_show_info_category")
-     *  //@Method("GET")
-     */
-    public function showCategory($id)
-    {  
-        
-        $repo = $this->getDoctrine()->getRepository(Category::class);
-        
-        //Request Handling
-        $category= $repo->find($id);
-       
-        return $this->render('category/showCategory.html.twig',  array(
-            'category' => $category));
-    }
-
 
      /**
-     * @Route("api_category/delete/{id}",name="api_deleteCategory")
-     * //@Method("DELETE ")
+     * @Route("/api/category/{id}",name="api_show_info_category",methods={"GET","HEAD"})
      */
-    public function deleteCategory($id)
+    public function showCategory($id)//ok
     {  
         
-        $repo = $this->getDoctrine()->getManager();
-        $category =$repo->getRepository(Category::class)->find($id);
-        $repo->remove($category);
-        $repo->flush();
-        return $this->redirectToRoute("allCategory");
+        $encoders = array(new JsonEncoder());
+        $normalizers = array(new ObjectNormalizer());
+        $serializer = new Serializer($normalizers, $encoders);
+
+        if ($id != null) {
+            $categories = $this->getDoctrine()
+                            ->getRepository(Category::class)
+                            ->find($id);
+
+            $jsonContent = $serializer->serialize($categories, 'json');
+
+            $response = new JsonResponse();
+            $response->setContent($jsonContent);
+            
+        }
+        else
+            {
+                $query['valid'] = false; 
+                $response->setStatusCode('404');
+            }
+        
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setStatusCode('302');
+        
+        return $response;
     }
 
-    ///-----
-
-    /**
-     * @Route("api/category/update/{id}",name="api_categoryUpdate")
-     * //@Method("PUT ")
+     /**
+     * @Route("/api/deleteCategory/{id}",name="api_deleteCategory",methods={"DELETE", "OPTIONS"})
      */
-    public function updateCategory(Category $category ,Request $request, ObjectManager $manager)
+    public function deleteCategory($id)//ok
     {  
         
-       // $formCategory = $this->createForm(CategoryType::class,$category);
-       $formCategory = $this->createFormBuilder($category)
-                            ->add('name')
-                            ->add('description')
-                            ->add('Update', SubmitType::class)
-                            ->getForm();
-        //Request Handling
-        $formCategory->handleRequest($request);
-        $category = $formCategory->getData();
+        $response = new Response();
+        $query = array();
 
-        //Test if the form is validate and  submitted
-        if ($formCategory->isValid() && $formCategory->isSubmitted()) {   
-            $manager->persist($category);
-            $manager->flush();
-            return $this->redirectToRoute("allCategory"); 
-        }else
-            return $this->render('category/new.html.twig', array('formCategory' =>
-            $formCategory->createView()));
+        if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS')
+        {
+            $response->headers->set('Content-Type', 'application/text');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type',true);
+
+            return $response;
+        }
+
+        if ($id != null) {
+            $em = $this->getdoctrine()->getManager();
+            $category = $em->getRepository(Category::class)->find($id);
+            $em->remove($category);
+            $em->flush();
+
+            $query['valid'] = true; 
+            $response->setStatusCode('200');
+        }
+        else
+        {
+            $query['valid'] = false; 
+            $response->setStatusCode('404');
+        }
+
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($query));
+
+        return $response;
+    }
+
+   
+
+    /**
+     * @Route("/api/updateCategory/{id}",name="Api_categoryUpdate",methods={"PUT", "OPTIONS"})
+     */
+    public function updateCategory($id,Request $request)//bug
+    {  
+        
+        $response = new Response();
+        $query = array();
+
+        if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS')
+        {
+            $response->headers->set('Content-Type', 'application/text');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type',true);
+
+            return $response;
+        }
+
+        $json = $request->getContent();
+        $content = json_decode($json, true);
+
+        /*!!!!!!!!!*/
+        if ($id!= null)
+        {
+            $category = $this->getDoctrine()
+                     ->getRepository(Category::class)
+                     ->find($id);
+
+            $category->setName($content["name"]);
+            $category->setDescription($content["description"]);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($category);
+            $em->flush();
+
+            $query['valid'] = true; 
+            $query['data'] = array('id' => $id,
+                                   'name' => $content["name"],
+                                   'description' => $content["description"]);
+            $response->setStatusCode('200');
+        }
+        else 
+        {
+            $query['valid'] = false; 
+            $query['data'] = null;
+            $response->setStatusCode('404');
+        }        
+
+        $response->headers->set('Content-Type', 'application/json');
+        $response->setContent(json_encode($query));
+
+        return $response;
+
     }
     
 }

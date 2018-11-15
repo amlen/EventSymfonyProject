@@ -23,6 +23,7 @@ class Category
      * @ORM\Column(type="string", length=255)
      *  @Assert\Length(
      *      min = 6,
+     *      max = 50,
      *      minMessage = "The name must be at least {{ limit }} characters long",
      *      maxMessage = "The name cannot be longer than {{ limit }} characters")
      **/
@@ -33,16 +34,8 @@ class Category
      */
     private $description;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Event", mappedBy="categoryID")
-     */
-    private $events;
+   
 
-    public function __construct()
-    {
-        $this->events = new ArrayCollection();
-    }
-    
     public function getId(): ?int
     {
         return $this->id;
@@ -72,43 +65,13 @@ class Category
         return $this;
     }
 
-    /**
-     * @return Collection|Event[]
-     */
-    public function getEvents(): Collection
-    {
-        return $this->events;
-    }
-
-    public function addEvent(Event $event): self
-    {
-        if (!$this->events->contains($event)) {
-            $this->events[] = $event;
-            $event->setCategoryID($this);
-        }
-
-        return $this;
-    }
-
-    public function removeEvent(Event $event): self
-    {
-        if ($this->events->contains($event)) {
-            $this->events->removeElement($event);
-            // set the owning side to null (unless already changed)
-            if ($event->getCategoryID() === $this) {
-                $event->setCategoryID(null);
-            }
-        }
-
-        return $this;
-    }
-
     public function __toString(){
         // to show the name of the Category in the select
         return $this->name;
         // to show the id of the Category in the select
         // return $this->id;
     }
+   
 
   
 }

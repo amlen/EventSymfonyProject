@@ -9,11 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Event
 {
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="id")
-     * @ORM\JoinColumn(nullable=false)
-    */
-    private $category;
+   
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -36,7 +32,13 @@ class Event
      */
     private $date;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $category;
 
+    
     public function getId(): ?int
     {
         return $this->id;
@@ -89,4 +91,10 @@ class Event
 
         return $this;
     }
+
+
+    
+
+
+  
 }
