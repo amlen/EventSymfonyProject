@@ -62,12 +62,11 @@ class EventAPIController extends AbstractController
         $json = $request->getContent();
         $content = json_decode($json, true);
         $eve = new Event();
-        //----
-        $t=json_decode(
+        
+        /*$t=json_decode(
             $request->getContent(),true
-        );
-        //--
-        print('jjj'.$t);
+        );*/
+        
         if (isset($content["name"]) && isset($content["description"]) && isset($content["date"]) 
             && isset($content["category"]))
         {
@@ -183,7 +182,7 @@ class EventAPIController extends AbstractController
     /**
      * @Route("/api/updateEvent/{id}",name="api_categoryUpdate",methods={"PUT", "OPTIONS"})
      */
-    public function updateEvent($id,Request $request)//bug
+    public function updateEvent($id,Request $request)
     {  
         
         $response = new Response();

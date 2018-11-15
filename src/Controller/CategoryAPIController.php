@@ -48,24 +48,24 @@ class CategoryAPIController extends AbstractController
     /**
      * @Route("/api/addCategory",name="Api_category_new",methods={"POST", "OPTIONS"})
      */
-    public function addCategory(Request $request)//bug
+    public function addCategory(Request $request)//ok
     {  
         $response = new Response();
         $query = array();
+        $json = $request->getContent();
+        $content = json_decode($json, true);
 
         if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS')
         {
             $response->headers->set('Content-Type', 'application/text');
             $response->headers->set('Access-Control-Allow-Origin', '*');
-            $response->headers->set('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Methods', 'DELETE, OPTIONS');
             $response->headers->set('Access-Control-Allow-Headers', 'Content-Type',true);
 
             return $response;
         }
 
-        $json = $request->getContent();
-        $content = json_decode($json, true);
-        print('jj '.$content["name"]);
+        
         if (isset($content["name"]) && isset($content["description"]))
         {
             $cat = new Category();
@@ -130,7 +130,7 @@ class CategoryAPIController extends AbstractController
      /**
      * @Route("/api/deleteCategory/{id}",name="api_deleteCategory",methods={"DELETE", "OPTIONS"})
      */
-    public function deleteCategory($id)//ok
+    public function deleteCategory($id)// je gere pas le message d'erreur quand j'essaye de supprimer un catégorie qui il a un ou plusieurs éven
     {  
         
         $response = new Response();
@@ -140,7 +140,7 @@ class CategoryAPIController extends AbstractController
         {
             $response->headers->set('Content-Type', 'application/text');
             $response->headers->set('Access-Control-Allow-Origin', '*');
-            $response->headers->set('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Methods', 'DELETE, OPTIONS');
             $response->headers->set('Access-Control-Allow-Headers', 'Content-Type',true);
 
             return $response;
@@ -191,7 +191,6 @@ class CategoryAPIController extends AbstractController
         $json = $request->getContent();
         $content = json_decode($json, true);
 
-        /*!!!!!!!!!*/
         if ($id!= null)
         {
             $category = $this->getDoctrine()
