@@ -32,7 +32,7 @@ class CategoryAPIController extends AbstractController
         $serializer = new Serializer($normalizers, $encoders);
 
         $categories = $this->getDoctrine()
-                           ->getRepository(Event::class)
+                           ->getRepository(Category::class)
                            ->findAll();
 
         $jsonContent = $serializer->serialize($categories, 'json');
