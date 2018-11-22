@@ -31,6 +31,16 @@ class CategoryAPIController extends AbstractController
         $normalizers = array(new ObjectNormalizer());
         $serializer = new Serializer($normalizers, $encoders);
 
+        if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS')
+        {
+            $response->headers->set('Content-Type', 'application/text');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type',true);
+
+            return $response;
+        }
+
         $categories = $this->getDoctrine()
                            ->getRepository(Category::class)
                            ->findAll();
@@ -59,7 +69,7 @@ class CategoryAPIController extends AbstractController
         {
             $response->headers->set('Content-Type', 'application/text');
             $response->headers->set('Access-Control-Allow-Origin', '*');
-            $response->headers->set('Access-Control-Allow-Methods', 'DELETE, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Methods', 'POST, OPTIONS');
             $response->headers->set('Access-Control-Allow-Headers', 'Content-Type',true);
 
             return $response;
@@ -103,6 +113,16 @@ class CategoryAPIController extends AbstractController
         $encoders = array(new JsonEncoder());
         $normalizers = array(new ObjectNormalizer());
         $serializer = new Serializer($normalizers, $encoders);
+
+        if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS')
+        {
+            $response->headers->set('Content-Type', 'application/text');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set('Access-Control-Allow-Methods', 'GET,OPTIONS');
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type',true);
+
+            return $response;
+        }
 
         if ($id != null) {
             $categories = $this->getDoctrine()
@@ -172,7 +192,7 @@ class CategoryAPIController extends AbstractController
     /**
      * @Route("/api/updateCategory/{id}",name="Api_categoryUpdate",methods={"PUT", "OPTIONS"})
      */
-    public function updateCategory($id,Request $request)//bug
+    public function updateCategory($id,Request $request)//ok
     {  
         
         $response = new Response();
@@ -182,7 +202,7 @@ class CategoryAPIController extends AbstractController
         {
             $response->headers->set('Content-Type', 'application/text');
             $response->headers->set('Access-Control-Allow-Origin', '*');
-            $response->headers->set('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Methods', 'PUT, OPTIONS');
             $response->headers->set('Access-Control-Allow-Headers', 'Content-Type',true);
 
             return $response;

@@ -35,6 +35,16 @@ class EventAPIController extends AbstractController
         $normalizers = array(new ObjectNormalizer());
         $serializer = new Serializer($normalizers, $encoders);
 
+        if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS')
+        {
+            $response->headers->set('Content-Type', 'application/text');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type',true);
+
+            return $response;
+        }
+
         $categories = $this->getDoctrine()
                            ->getRepository(Event::class)
                            ->findAll();
@@ -50,12 +60,11 @@ class EventAPIController extends AbstractController
       
     }
 
-    ///------
     
     /**
      * @Route("/api/addEvent",name="api_event_new",methods={"POST"})
      */
-    public function addEvent(Request $request)//bug
+    public function addEvent(Request $request)//ok
     {  
         $response = new Response();
         $query = array();
@@ -63,9 +72,16 @@ class EventAPIController extends AbstractController
         $content = json_decode($json, true);
         $eve = new Event();
         
-        /*$t=json_decode(
-            $request->getContent(),true
-        );*/
+        if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS')
+        {
+            $response->headers->set('Content-Type', 'application/text');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set('Access-Control-Allow-Methods',  'POST,  OPTIONS');
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type',true);
+
+            return $response;
+        }
+      
         
         if (isset($content["name"]) && isset($content["description"]) && isset($content["date"]) 
             && isset($content["category"]))
@@ -114,6 +130,16 @@ class EventAPIController extends AbstractController
         $normalizers = array(new ObjectNormalizer());
         $serializer = new Serializer($normalizers, $encoders);
 
+        if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS')
+        {
+            $response->headers->set('Content-Type', 'application/text');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set('Access-Control-Allow-Methods', 'GET, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type',true);
+
+            return $response;
+        }
+
         if ($id != null) {
             $event = $this->getDoctrine()
                             ->getRepository(Event::class)
@@ -150,7 +176,7 @@ class EventAPIController extends AbstractController
         {
             $response->headers->set('Content-Type', 'application/text');
             $response->headers->set('Access-Control-Allow-Origin', '*');
-            $response->headers->set('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Methods', ' DELETE, OPTIONS');
             $response->headers->set('Access-Control-Allow-Headers', 'Content-Type',true);
 
             return $response;
@@ -182,7 +208,7 @@ class EventAPIController extends AbstractController
     /**
      * @Route("/api/updateEvent/{id}",name="api_categoryUpdate",methods={"PUT", "OPTIONS"})
      */
-    public function updateEvent($id,Request $request)
+    public function updateEvent($id,Request $request)//ok
     {  
         
         $response = new Response();
@@ -192,7 +218,7 @@ class EventAPIController extends AbstractController
         {
             $response->headers->set('Content-Type', 'application/text');
             $response->headers->set('Access-Control-Allow-Origin', '*');
-            $response->headers->set('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE, OPTIONS');
+            $response->headers->set('Access-Control-Allow-Methods', ' PUT, OPTIONS');
             $response->headers->set('Access-Control-Allow-Headers', 'Content-Type',true);
 
             return $response;
@@ -201,7 +227,7 @@ class EventAPIController extends AbstractController
         $json = $request->getContent();
         $content = json_decode($json, true);
 
-        /*!!!!!!!!!*/
+        
         if ($id!= null)
         {
             $event = $this->getDoctrine()
@@ -211,10 +237,10 @@ class EventAPIController extends AbstractController
                      ->getRepository(Category::class)
                      ->find($content["category"]);
 
-            $eve->setName($content["name"]);
-            $eve->setDescription($content["description"]);
-            $eve->setDate($content["date"]);
-            $eve->setCategory($category);
+            $event->setName($content["name"]);
+            $event->setDescription($content["description"]);
+            $event->setDate($content["date"]);
+            $event->setCategory($category);
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($event);
