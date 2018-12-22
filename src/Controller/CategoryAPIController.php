@@ -22,10 +22,12 @@ use Symfony\Component\Serializer\Serializer;
 
 class CategoryAPIController extends AbstractController
 {
+
+
     /**
     * @Route("/api/categories",name="api_allCategory",methods={"GET","HEAD"})
     */
-    public function showall()//ok
+    public function showall()
     {
         $encoders = array(new JsonEncoder());
         $normalizers = array(new ObjectNormalizer());
@@ -50,7 +52,7 @@ class CategoryAPIController extends AbstractController
         $response = new JsonResponse();
         $response->setContent($jsonContent);
         $response->headers->set('Content-Type', 'application/json');
-        $response->setStatusCode('302');
+        $response->setStatusCode('200');
 
         return $response;
     }
@@ -58,7 +60,7 @@ class CategoryAPIController extends AbstractController
     /**
      * @Route("/api/addCategory",name="Api_category_new",methods={"POST", "OPTIONS"})
      */
-    public function addCategory(Request $request)//ok
+    public function addCategory(Request $request)
     {  
         $response = new Response();
         $query = array();
@@ -74,12 +76,12 @@ class CategoryAPIController extends AbstractController
 
             return $response;
         }
-
+       
         
         if (isset($content["name"]) && isset($content["description"]))
         {
+            
             $cat = new Category();
-
             $cat->setName($content["name"]);
             $cat->setDescription($content["description"]);
 
@@ -94,7 +96,7 @@ class CategoryAPIController extends AbstractController
         }
         else 
         {
-            $query['valid'] = false; 
+            $query['valid'] = true; 
             $query['data'] = null;
             $response->setStatusCode('404');
         }        
@@ -107,7 +109,7 @@ class CategoryAPIController extends AbstractController
      /**
      * @Route("/api/category/{id}",name="api_show_info_category",methods={"GET","HEAD"})
      */
-    public function showCategory($id)//ok
+    public function showCategory($id)
     {  
         
         $encoders = array(new JsonEncoder());
@@ -142,7 +144,7 @@ class CategoryAPIController extends AbstractController
             }
         
         $response->headers->set('Content-Type', 'application/json');
-        $response->setStatusCode('302');
+        $response->setStatusCode('200');
         
         return $response;
     }
@@ -150,7 +152,7 @@ class CategoryAPIController extends AbstractController
      /**
      * @Route("/api/deleteCategory/{id}",name="api_deleteCategory",methods={"DELETE", "OPTIONS"})
      */
-    public function deleteCategory($id)// je gere pas le message d'erreur quand j'essaye de supprimer un catégorie qui il a un ou plusieurs éven
+    public function deleteCategory($id)
     {  
         
         $response = new Response();
@@ -192,7 +194,7 @@ class CategoryAPIController extends AbstractController
     /**
      * @Route("/api/updateCategory/{id}",name="Api_categoryUpdate",methods={"PUT", "OPTIONS"})
      */
-    public function updateCategory($id,Request $request)//ok
+    public function updateCategory($id,Request $request)
     {  
         
         $response = new Response();

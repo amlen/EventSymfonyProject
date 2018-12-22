@@ -28,7 +28,7 @@ class EventAPIController extends AbstractController
     /**
      * @Route("/api/events", name="api_show_events",methods={"GET","HEAD"})
      */
-    public function index()//ok
+    public function index()
     {   
 
         $encoders = array(new JsonEncoder());
@@ -54,7 +54,7 @@ class EventAPIController extends AbstractController
         $response = new JsonResponse();
         $response->setContent($jsonContent);
         $response->headers->set('Content-Type', 'application/json');
-        $response->setStatusCode('302');
+        $response->setStatusCode('200');
 
         return $response;
       
@@ -64,7 +64,7 @@ class EventAPIController extends AbstractController
     /**
      * @Route("/api/addEvent",name="api_event_new",methods={"POST"})
      */
-    public function addEvent(Request $request)//ok
+    public function addEvent(Request $request)
     {  
         $response = new Response();
         $query = array();
@@ -82,11 +82,11 @@ class EventAPIController extends AbstractController
             return $response;
         }
       
-        
-        if (isset($content["name"]) && isset($content["description"]) && isset($content["date"]) 
+        //var_dump($content);
+        if (isset($content["name"]) && isset($content["description"]) && isset($content["date"])
             && isset($content["category"]))
         {
-           
+            
             $category = $this->getDoctrine()
                      ->getRepository(Category::class)
                      ->find($content["category"]);
@@ -123,7 +123,7 @@ class EventAPIController extends AbstractController
      /**
      * @Route("/api/event/{id}",name="api_show_info_event",methods={"GET","HEAD"})
      */
-    public function showEvent($id)//ok
+    public function showEvent($id)
     {  
         
         $encoders = array(new JsonEncoder());
@@ -158,7 +158,7 @@ class EventAPIController extends AbstractController
             }
         
         $response->headers->set('Content-Type', 'application/json');
-        $response->setStatusCode('302');
+        $response->setStatusCode('201');
         
         return $response;
     }
@@ -166,7 +166,7 @@ class EventAPIController extends AbstractController
      /**
      * @Route("/api/deleteEvent/{id}",name="api_deleteEvent",methods={"DELETE", "OPTIONS"})
      */
-    public function deleteEvent($id)//ok
+    public function deleteEvent($id)
     {  
         
         $response = new Response();

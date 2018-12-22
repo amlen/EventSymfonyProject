@@ -5,15 +5,20 @@
 
 {% block body %}
     {% for cat in categories %}
-        <a href="{{path('show_info_category', { 'id': cat.id })}}" ><h2>{{ cat.name}}</h2></a>
+        <div class="container">
+            <div class="card border-primary " style="margin:1rem">
+                <div class="card-header"><a href="{{path('show_info_category', { 'id': cat.id })}}" ><h2>{{ cat.name}}</h2></a></div>
                 
-        <div class="content">
-            {{ cat.description}}
+                <div class="card-body">
+                    <p class="card-text"> {{ cat.description}}</p>
+                    <button  class="btn btn-primary" onclick="javascript:location.href='{{path('deleteCategory', { 'id': cat.id })}}'">Delete</button>
+                    <button  class="btn btn-primary" onclick="javascript:location.href='{{path('categoryUpdate', { 'id': cat.id })}}'" >Update</button>
+                </div>
+        
+            </div>
         </div>
-        <a href="{{path('deleteCategory', { 'id': cat.id })}}" ><h2>Delete</h2></a>
-        <a href="{{path('categoryUpdate', { 'id': cat.id })}}" ><h2>Update</h2></a>
     {% endfor %}
     
-
-  
 {% endblock %}
+
+

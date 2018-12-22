@@ -20,6 +20,7 @@ class CategoryController extends Controller
     */
     public function showall()
     {
+        
         $em = $this->getDoctrine()->getManager();
         $allCategories = $em->getRepository(Category::class)->findAll();
         if (!$allCategories) {
@@ -29,7 +30,8 @@ class CategoryController extends Controller
         }
        // var_dump($allCategories);
         return $this->render('category/index.html.twig', array(
-            'categories' => $allCategories,
+            'categories' => $allCategories
+            
         ));
     }
 
@@ -38,7 +40,7 @@ class CategoryController extends Controller
      */
     public function addCategory(Request $request, ObjectManager $manager)
     {  
-      
+        $title = "Add category";
         $category = new Category();
 
         $formCategory = $this->createFormBuilder($category)
@@ -59,7 +61,9 @@ class CategoryController extends Controller
            return $this->redirectToRoute("allCategory");
         }else
             return $this->render('category/new.html.twig', array('formCategory' =>
-            $formCategory->createView()));    
+            $formCategory->createView(),
+            'title' => $title
+            ));    
     }
 
     /**
@@ -98,7 +102,7 @@ class CategoryController extends Controller
      */
     public function updateCategory(Category $category ,Request $request, ObjectManager $manager)
     {  
-        
+        $title = "Update category";
        // $formCategory = $this->createForm(CategoryType::class,$category);
        $formCategory = $this->createFormBuilder($category)
                             ->add('name')
@@ -116,7 +120,9 @@ class CategoryController extends Controller
             return $this->redirectToRoute("allCategory"); 
         }else
             return $this->render('category/new.html.twig', array('formCategory' =>
-            $formCategory->createView()));
+            $formCategory->createView(),
+            'title' => $title
+            ));
     }
     
 }

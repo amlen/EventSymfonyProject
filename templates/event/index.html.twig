@@ -3,17 +3,21 @@
 
 {% block body %}
     {% for event in events %}
-        <a href="{{path('show_info_event', { 'id': event.id })}}" ><h2>{{ event.name}}</h2></a>
+        <div class="container">
+            <div class="card border-primary " style="margin:1rem">
+                <div class="card-header">
+                    <a href="{{path('show_info_event', { 'id': event.id })}}" ><h2>{{ event.name}}</h2></a>
+                    <div class="metadata">Publié le : {{ event.date }} - catégorie: {{ event.category.name}}</div>
+                </div>
+                
+                <div class="card-body">
+                    <p class="card-text"> {{ event.description }}</p>
+                    <button  class="btn btn-primary" onclick="javascript:location.href='{{path('deleteEvent', { 'id': event.id })}}'">Delete</button>
+                    <button  class="btn btn-primary" onclick="javascript:location.href='{{path('EventUpdate', { 'id': event.id })}}'" >Update</button>
+                </div>
         
-        <div class="metadata">Publié le : {{ event.date |date('d-m-Y')}}</div>
-        
-        <div class="content">
-            {{ event.description}}
-        <a href="{{path('deleteEvent', { 'id': event.id })}}" ><h2>Delete</h2></a>
-        <a href="{{path('EventUpdate', { 'id': event.id })}}" ><h2>Update</h2></a>
+            </div>
         </div>
     {% endfor %}
     
-
-  
 {% endblock %}

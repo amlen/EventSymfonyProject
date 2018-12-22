@@ -62,7 +62,7 @@ class EventController extends Controller
     public function new(Request $request, ObjectManager $manager)
     {  
         $event = new Event();
-
+        $title = "Add an event";
         $formEvent = $this->createFormBuilder($event)
                      ->add('name')
                      ->add('description')
@@ -84,13 +84,13 @@ class EventController extends Controller
             return $this->redirectToRoute("show_events");
         }else
             return $this->render('event/new.html.twig', array('formEvent' =>
-            $formEvent->createView()));
+            $formEvent->createView(),'title'=>$title));
     }
 
     /**
      * @Route("/delete/{id}",name="deleteEvent")
      */
-    public function deleteCategory($id)
+    public function deleteEvent($id)
     {  
         
         $repo = $this->getDoctrine()->getManager();
@@ -106,7 +106,7 @@ class EventController extends Controller
     public function updateEvent(Event $event ,Request $request, ObjectManager $manager)
     {  
         
-      
+        $title = "Update an event";
        $formEvent = $this->createFormBuilder($event)
                             ->add('name')
                             ->add('description')
@@ -125,6 +125,6 @@ class EventController extends Controller
             return $this->redirectToRoute("show_events"); 
         }
         return $this->render('event/new.html.twig', array('formEvent' =>
-            $formEvent->createView()));
+            $formEvent->createView(),'title'=>$title));
     }
 }
