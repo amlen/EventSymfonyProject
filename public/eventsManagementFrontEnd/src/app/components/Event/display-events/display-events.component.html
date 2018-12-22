@@ -1,0 +1,14 @@
+<div *ngFor="let e of events"> 
+  <div class="container">
+    <div class="card border-primary " style="margin:1rem">
+      <div class="card-header"><h3>{{ e.name }} </h3><br/> <h6>{{ e.category.name }} - {{ e.date }} </h6></div>
+      <div class="card-body">
+        <p class="card-text">{{ e.description }}</p>
+      </div>
+      <div style="padding:20px;">
+        <button class="btn btn-primary" [routerLink]="['/updateEvent', e.id]">Update</button> &nbsp;
+        <button class="btn btn-primary" (click)="deleteEvent(e.id)">Delete</button>
+      </div>
+    </div>
+  </div>
+</div> 

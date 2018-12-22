@@ -1,0 +1,34 @@
+
+<div class="container">
+  <div class="card border-primary " style="margin:1rem">
+    <div class="card-header">Update event</div>
+    <div class="card-body">
+      <form  (ngSubmit)="onSubmit()">
+        <div class="form-group has-success">
+          <label class="form-control-label" for="inputSuccess1">Name</label>
+          <input type="text" class="form-control" [(ngModel)]="event.name" name="name">
+        </div>
+      
+        <div class="form-group">
+          <label for="exampleTextarea">Description</label>
+          <textarea class="form-control" rows="3" [(ngModel)]="event.description" name="description"></textarea>
+        </div>
+      
+        <div class="form-group">
+          <label for="exampleTextarea">Date</label>
+          <input type="date" class="form-control"  [(ngModel)]="event.date" name="date">
+        </div>
+        
+        <div class="form-group">
+          <label for="exampleSelect1">Categories</label>
+          <select class="form-control" id="exampleSelect" [(ngModel)]="event.category.id" name="category">
+              <option *ngFor="let category of categories" [ngValue]="category.id">{{ category.name }}</option>
+          </select>
+        </div>
+      
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+

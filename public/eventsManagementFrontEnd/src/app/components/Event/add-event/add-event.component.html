@@ -1,0 +1,71 @@
+<div class="container">
+      <div class="card border-primary " style="margin:1rem">
+        <div class="card-header">Add event</div>
+        <div class="card-body">
+            <form  #frm="ngForm" (ngSubmit)="onSubmit()">
+
+                <div class="form-group has-success">
+                  <label class="form-control-label">Name</label>
+                  <input type="text" class="form-control" [(ngModel)]="event.name" name="name" placeholder="Event name"
+                          required minlength="4" #name="ngModel" pattern="[a-zA-Zéàèç]*" 
+                          minlength="4" >
+                </div>
+                
+                <div class="alert alert-danger" role="alert"  [hidden]="name.valid" > 
+
+                  <div *ngIf="name.errors?.required" > 
+                    Name is required
+                  </div>
+
+                  <div *ngIf="name.errors?.pattern" > 
+                    Invalid name
+                  </div>
+
+                  <div *ngIf="name.errors?.minlength" > 
+                    You must have at least 4 caracters.
+                  </div>
+
+                </div>
+
+                <div class="form-group">
+                  <label>Description</label>
+                  <textarea class="form-control" rows="3" [(ngModel)]="event.description" name="description" placeholder="Event description"></textarea>
+                </div>
+              
+                <div class="form-group">
+                  <label>Date</label>
+                  <input class="form-control"  type="date"  [(ngModel)]="event.date" name="date" #date="ngModel" required>
+                </div>
+
+                <div class="alert alert-danger" role="alert"  [hidden]="date.valid" > 
+
+                  <div *ngIf="date.errors?.required" > 
+                    Category is required
+                  </div>
+
+                </div>
+
+                <div class="form-group">
+                  <label for="exampleSelect1">Categories</label>
+                  <select class="form-control" id="exampleSelect1" [(ngModel)]="event.category.id" name="category"
+                      #category="ngModel" required>
+                      <option *ngFor="let c of categories" [ngValue]="c">{{ c.name }}</option>
+                  </select>
+                </div>
+
+                <div class="alert alert-danger" role="alert"  [hidden]="category.valid" > 
+
+                  <div *ngIf="category.errors?.required" > 
+                    Category is required
+                  </div>
+
+                </div>
+            
+                <button type="submit" class="btn btn-primary" [disabled]="frm.invalid" >Add event</button>
+
+              </form>
+        </div>
+      </div>
+</div>
+
+  
