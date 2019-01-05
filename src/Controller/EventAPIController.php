@@ -82,15 +82,15 @@ class EventAPIController extends AbstractController
             return $response;
         }
       
-        //var_dump($content);
+       // var_dump($content);
         if (isset($content["name"]) && isset($content["description"]) && isset($content["date"])
             && isset($content["category"]))
         {
-            
-            $category = $this->getDoctrine()
+           // var_dump('c'. $content["category"]);
+             $category = $this->getDoctrine()
                      ->getRepository(Category::class)
                      ->find($content["category"]);
-
+//var_dump( $category);
             $eve->setName($content["name"]);
             $eve->setDescription($content["description"]);
             $eve->setDate($content["date"]);

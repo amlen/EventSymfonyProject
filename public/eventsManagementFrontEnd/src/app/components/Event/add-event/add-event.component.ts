@@ -5,7 +5,6 @@ import { EventService } from 'src/app/services/event.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { HttpClient } from '@angular/common/http';
 import { Event } from 'src/app/classes/event';
-import { ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-add-event',
@@ -16,14 +15,12 @@ export class AddEventComponent implements OnInit {
 
   event: Event;
   categories: Category[];
- // angForm: FormGroup;
   constructor(private router: Router,
               private eventService: EventService,
               private categoryService: CategoryService,
               private http: HttpClient,
-             /* private fb: FormBuilder*/ ) {
+         ) {
     this.event = new Event();
-   // this.createForm();
   }
 
   ngOnInit() {
@@ -42,7 +39,6 @@ export class AddEventComponent implements OnInit {
   }
 
   onSubmit() {
-    // tslint:disable-next-line:prefer-const
     let event = {
       'name': this.event.name,
       'description': this.event.description,

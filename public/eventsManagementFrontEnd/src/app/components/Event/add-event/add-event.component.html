@@ -49,7 +49,7 @@
                   <label for="exampleSelect1">Categories</label>
                   <select class="form-control" id="exampleSelect1" [(ngModel)]="event.category.id" name="category"
                       #category="ngModel" required>
-                      <option *ngFor="let c of categories" [ngValue]="c">{{ c.name }}</option>
+                      <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
                   </select>
                 </div>
 

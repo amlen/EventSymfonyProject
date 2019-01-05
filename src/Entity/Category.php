@@ -22,7 +22,7 @@ class Category
     /**
      * @ORM\Column(type="string", length=255)
      *  @Assert\Length(
-     *      min = 4,
+     *      min = 6,
      *      max = 50,
      *      minMessage = "The name must be at least {{ limit }} characters long",
      *      maxMessage = "The name cannot be longer than {{ limit }} characters")
